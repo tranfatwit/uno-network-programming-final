@@ -4,8 +4,32 @@ Created on Tue Oct 12 16:57:12 2021
 """
 
 import socket
-import threading
+#import threading
+import player
 
+def host_players(numplayers, socket_, players):
+    """"Waits for specified number of players to join and fills players with the player info"""
+    connections = 0
+    while(connections != numplayers):
+        try:
+            sc, address = socket_.accept()
+            request = sc.recv(50).decode().splitlines()
+            if request[0] == "CONNECT":
+                username = "User" + connections
+                for line in range(len(request)) + 1:
+                    header = request[line].split(' ')
+                    if(header[0] == "Username:"):
+                        username = header[1]
+
+                connections += 1
+                usr = player.Player((sc, address), username)
+                players.append(usr)
+                sc.sendall(b"ACCEPTED")
+        except socket.error as msg:
+            print('Connection failed: ' + str(msg[0]) + ' Message ' + msg[1])
+            sc.close()
+    
+    
 def thread_recieve(name, sock, client):
     #print("Thread {0} starting:".format(name,))
     while True:
@@ -17,7 +41,7 @@ def thread_recieve(name, sock, client):
 
 
 HOST = ''
-PORT = 9999
+PORT = 11111
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('Socket created')
@@ -25,31 +49,8 @@ print('Socket created')
 s.bind((HOST, PORT))
 print('Socket bound')
 s.listen(10)
-while True:
-    try:
-        sc, address = s.accept()
-        print('Connected with ' + address[0] + ':' + str(address[1]))
-        
-        rThread = threading.Thread(target = thread_recieve, args=(1, sc, address[0]), daemon=True)
 
-        rThread.start()
-        
-        while True:            
-            try:
-                message = sc.recv(50).decode()
-                    
-                if(message == "logout") :
-                    print("User {0} left.".format(address[0]))
-                    sc.sendall(b"logout")
-                    rThread.join()
-                    sc.close()
-                    break
-                print("{0}: ".format(address[0]) + message)
-            except socket.error:
-                sc.close()
-            
-            
-    except socket.error as msg:
-        print('Bind failed: ' + str(msg[0]) + ' Message ' + msg[1])
-        sc.close()
+players = []
+host_players(4, s, players)
+# TODO: Implement game.
 s.close()
