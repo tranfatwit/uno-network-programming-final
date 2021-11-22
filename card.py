@@ -20,7 +20,8 @@ class Card:
     def set_wild_color(self, color):
         self.wild_color = color
 
-     # Used to compare color or number between two cards 
+     # Used to compare color or number between two cards, self is the last card
+     # played and other_card is the next card attempting to be played 
     def match_card(self, other_card):
         # checks if other card is a wild card
         if(other_card.color == "Any"):

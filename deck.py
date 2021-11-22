@@ -22,14 +22,30 @@ class Deck():
         # Discard pile
         self.discard_pile = []
         
-        # Creates number cards, 1 zero for each color, 2 of every number 1-9 
-        # for each color
+        # Creates all uno cards, 1 zero for each color, 2 of every number 1-9 
+        # for each color, 2 of each action card for each color, and 4 of each 
+        # type of wild cards
         for color in Colors:
+            # creates wild cards
             if color.value == "Any":
+                for type in Types:
+                    if type.value == "Wild" or type.value == "Wild Draw-Four":
+                        for x in range(4):
+                            card = Card(color.value, "", type.value)
+                            #print(card)
+                            self.draw_pile.append(card)
                 continue
             for number in Numbers:
+                # creataes action cards
                 if number.value == "":
+                    for type in Types:
+                        if type.value == "Skip" or type.value == "Reverse" or type.value == "Draw-Two":
+                            for x in range(2):
+                                card = Card(color.value, "", type.value)
+                                #print(card)
+                                self.draw_pile.append(card)   
                     continue
+                # creates number cards
                 if number.value == "Zero":
                     card = Card(color.value,number.value,"Number")
                     #print(card)
@@ -39,34 +55,7 @@ class Deck():
                     card = Card(color.value,number.value,"Number")
                     #print(card)
                     self.draw_pile.append(card)
-                    
-        # Creates action cards, 2 of each action card for each color
-        for color in Colors:
-            if color.value == "Any":
-                continue
-            for number in Numbers:
-                if number.value != "":
-                    continue      
-                for type in Types:
-                    if type.value == "Number" or type.value == "Wild" or type.value == "Wild Draw-Four":
-                        continue           
-                    for x in range(2):
-                        card = Card(color.value, "", type.value)
-                        #print(card)
-                        self.draw_pile.append(card)
-                
-        # Creates wild cards, 4 of each type of wild card
-        for color in Colors:
-            if color.value != "Any":
-                continue
-            for type in Types:
-                if type.value == "Number" or type.value == "Skip" or type.value == "Reverse" or type.value == "Draw-Two":
-                    continue
-                for x in range(4):
-                    card = Card(color.value, "", type.value)
-                    #print(card)
-                    self.draw_pile.append(card)
-    
+                      
     # Function to shuffle deck
     def shuffle_deck(self):
         random.shuffle(self.draw_pile)
@@ -93,7 +82,7 @@ print("Printing cards:")
 card_counter = 0
 uno_deck = Deck()
 
-uno_deck.shuffle_deck()
+#uno_deck.shuffle_deck()
 for card in uno_deck.draw_pile:
     card_counter += 1
     print(card)
