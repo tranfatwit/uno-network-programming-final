@@ -7,6 +7,7 @@ Created on Mon Nov 22 00:35:02 2021
 
 import socket
 import player
+import queue
 
 def host_players(numplayers, socket_, players):
     """"Waits for specified number of players to join and fills players with the player info"""
@@ -25,7 +26,8 @@ def host_players(numplayers, socket_, players):
 
                 connections += 1
                 usr = player.Player((sc, address), username)
-                players.append(usr)
+                players.put(usr)
+                print("Added " + username)
                 sc.sendall(b"ACCEPTED")
         except socket.error as msg:
             print('Connection failed: ' + str(msg[0]) + ' Message ' + msg[1])
@@ -41,7 +43,11 @@ s.bind((HOST, PORT))
 print('Socket bound')
 s.listen(10)
 
-players = []
-host_players(4, s, players)
+players = queue.Queue()
+host_players(2, s, players)
+while(not players.empty()):
+    usr = players.get()
+    connection = usr.ip_address[0]
+    connection.sendall(b"Thanks for joining! The game is starting.")
 # TODO: Implement game.
 s.close()
