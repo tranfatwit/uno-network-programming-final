@@ -78,56 +78,56 @@ class Deck():
         random.shuffle(self.draw_pile)
     
 # Testing creation of UNO deck
-print("Printing cards:")
-card_counter = 0
-uno_deck = Deck()
+#print("Printing cards:")
+#card_counter = 0
+#uno_deck = Deck()
 
 #uno_deck.shuffle_deck()
-for card in uno_deck.draw_pile:
-    card_counter += 1
-    print(card)
+#for card in uno_deck.draw_pile:
+#    card_counter += 1
+#    print(card)
     
-print(str(card_counter) + " cards")
-print ("\n")
+#print(str(card_counter) + " cards")
+#print ("\n")
 
 # Testing draw 
-print("Testing drawing:")
-print(uno_deck.draw())
-print(uno_deck.draw())
-print(str(len(uno_deck.draw_pile))+ " cards")
-print ("\n")
+#print("Testing drawing:")
+#print(uno_deck.draw())
+#print(uno_deck.draw())
+#print(str(len(uno_deck.draw_pile))+ " cards")
+#print ("\n")
 
 # Testing discard
-print("Testing discarding:")
-print("Drawing a card:")
-card = uno_deck.draw()
-print(str(len(uno_deck.draw_pile))+ " cards")
-print("Discarding " + str(card))
-uno_deck.discard(card)
-print("Discard pile contains " + str(uno_deck.discard_pile[0]))
-print ("\n")
+#print("Testing discarding:")
+#print("Drawing a card:")
+#card = uno_deck.draw()
+#print(str(len(uno_deck.draw_pile))+ " cards")
+#print("Discarding " + str(card))
+#uno_deck.discard(card)
+#print("Discard pile contains " + str(uno_deck.discard_pile[0]))
+#print ("\n")
 
 # Checking last played 
-print("Last played:")
-print(uno_deck.last_played)
-print ("\n")
+#print("Last played:")
+#print(uno_deck.last_played)
+#print ("\n")
 
 # Testing reshuffle 
-print("Discarding whole draw pile")
-for x in range(len(uno_deck.draw_pile)):
-   card = uno_deck.draw()
-   uno_deck.discard(card)
-   print(card)
-print(str(len(uno_deck.draw_pile))+ " cards")
-print ("\n")
-print("Reshuffling:")
-uno_deck.reshuffle()
-print("Printing draw pile")
-for card in uno_deck.draw_pile:
-    print(card)
+#print("Discarding whole draw pile")
+#for x in range(len(uno_deck.draw_pile)):
+#   card = uno_deck.draw()
+#   uno_deck.discard(card)
+#   print(card)
+#print(str(len(uno_deck.draw_pile))+ " cards")
+#print ("\n")
+#print("Reshuffling:")
+#uno_deck.reshuffle()
+#print("Printing draw pile")
+#for card in uno_deck.draw_pile:
+#    print(card)
 
-print ("\n")
-print(str(len(uno_deck.draw_pile))+ " cards")
-print("Last played:")
-print(uno_deck.last_played)
-print ("\n")
+#print ("\n")
+#print(str(len(uno_deck.draw_pile))+ " cards")
+#print("Last played:")
+#print(uno_deck.last_played)
+#print ("\n")

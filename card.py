@@ -51,30 +51,30 @@ class Card:
         return str(self.color) + " " + str(self.number)
 
 # Testing creation of card objects
-print("Testing constructor and string return:")
-blue_one = Card("Blue","One","Number")
-print(blue_one)
-wild_card = Card("Any", "None", "Wild")
-print(wild_card)
-yellow_reverse = Card("Yellow", "None", "Reverse")
-print(yellow_reverse)
-blue_reverse = Card("Blue", "None", "Reverse")
-print(blue_reverse)
-print("\n")
+#print("Testing constructor and string return:")
+#blue_one = Card("Blue","One","Number")
+#print(blue_one)
+#wild_card = Card("Any", "None", "Wild")
+#print(wild_card)
+#yellow_reverse = Card("Yellow", "None", "Reverse")
+#print(yellow_reverse)
+#blue_reverse = Card("Blue", "None", "Reverse")
+#print(blue_reverse)
+#print("\n")
 
 # Testing def match_card
-print("Testing def match_card:")
-print(blue_one.match_card(wild_card))
-print(blue_one.match_card(yellow_reverse))
-print(yellow_reverse.match_card(blue_reverse))
-print(blue_reverse.match_card(blue_one))
-print("\n")
+#print("Testing def match_card:")
+#print(blue_one.match_card(wild_card))
+#print(blue_one.match_card(yellow_reverse))
+#print(yellow_reverse.match_card(blue_reverse))
+#print(blue_reverse.match_card(blue_one))
+#print("\n")
 
 # Testing setting wild color
-print("Testing set_wild_color:")
-wild_card.set_wild_color("Blue")
-print(wild_card.match_card(blue_one))
-print(wild_card.match_card(yellow_reverse))
+#print("Testing set_wild_color:")
+#wild_card.set_wild_color("Blue")
+#print(wild_card.match_card(blue_one))
+#print(wild_card.match_card(yellow_reverse))
 
 
 
