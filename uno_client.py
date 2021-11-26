@@ -25,3 +25,7 @@ message = s.recv(50).decode()
 print(message)
     
 s.close()
+
+def send_card():
+        
+def receive_card():
