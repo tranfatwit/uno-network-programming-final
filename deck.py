@@ -36,7 +36,7 @@ class Deck():
                             self.draw_pile.append(card)
                 continue
             for number in Numbers:
-                # creataes action cards
+                # creates action cards
                 if number.value == "":
                     for type in Types:
                         if type.value == "Skip" or type.value == "Reverse" or type.value == "Draw-Two":
@@ -86,6 +86,8 @@ class Deck():
 #for card in uno_deck.draw_pile:
 #    card_counter += 1
 #    print(card)
+# Test str_to_card to ensure same output
+#    print(Card.str_to_card(str(card)))
     
 #print(str(card_counter) + " cards")
 #print ("\n")

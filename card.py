@@ -6,6 +6,8 @@ Created on Fri Oct 22 12:46:28 2021
 @author: Fabio Tran
 """
 
+import enums
+
 # Class to create card objects
 class Card:
     
@@ -49,6 +51,23 @@ class Card:
             return str(self.color) + " " + str(self.type)
         # otherwise card is a number card
         return str(self.color) + " " + str(self.number)
+    
+    @staticmethod
+    def str_to_card(card_string):
+        values = card_string.split(' ')
+        if(values[0] == "Wild" and len(values) == 1):
+            return Card("Any", "", "Wild")
+        else:
+            color = values[0]
+            cardvalue = None
+            for num in enums.Numbers:
+                if(num.value == values[1]):
+                    cardvalue = (values[1], "Number")
+            if (cardvalue == None):
+                cardvalue = ("", values[1])
+            return Card(color, cardvalue[0], cardvalue[1])
+
+
 
 # Testing creation of card objects
 #print("Testing constructor and string return:")

@@ -33,6 +33,9 @@ def host_players(numplayers, socket_, players):
             print('Connection failed: ' + str(msg[0]) + ' Message ' + msg[1])
             sc.close()
 
+def send_update(socket):
+    socket.sendall("".encode())
+
 HOST = ''
 PORT = 11111
 
