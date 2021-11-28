@@ -42,6 +42,11 @@ class Game():
             
         # TODO once the while loop ends, send a message to server to end game
     
+    
+    # receives card from player, if player can't send a card, make them draw 
+    def receive_cards(self):
+        None
+    
     # processes events 
     def process_card(self):
         current_card = self.deck.last_played()
