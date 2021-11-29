@@ -69,7 +69,7 @@ class Deck():
         
     # Function to add to the discard pile
     def play(self, card):
-        self.discard_pile.append(self.last_played())
+        self.discard_pile.append(self.last_played)
         self.last_played = card
         
     # Function to reshuffle discard pile into draw pile excluding last played card

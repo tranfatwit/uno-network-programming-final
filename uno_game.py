@@ -20,11 +20,19 @@ class Game():
         self.deck.shuffle_deck()
         
         self.players = player_queue
+
+        first_card = self.deck.draw()
+        while(first_card.color == "Any"):
+            self.deck.discard_pile.append(first_card)
+            first_card = self.deck.draw()
+            
+        self.deck.last_played = first_card
         
         # deals cards to each player
         for x in range(7):
             for usr in self.players:
-                usr.hand.put(self.deck.draw())
+                usr.hand.append(self.deck.draw())
+
             
     # runs rounds of uno until there is a winner 
     def run_game(self):
@@ -35,9 +43,11 @@ class Game():
             usr = self.players[0]
             playable = []
             # make a list of cards that the user may play
-            for card_ in usr.hand:
-                if(self.deck.last_played().match_card(card_)):
-                    playable.append(card_)
+            last_card = self.deck.last_played
+            for item in usr.hand:
+                if(last_card.match_card(item)):
+                    print(str(item))
+                    playable.append(item)
             
             # Send the user a request for their turn and process it
             usr_turn = uno_server.give_turn(usr, playable)
@@ -60,7 +70,7 @@ class Game():
     
     # processes events 
     def process_card(self):
-        type = self.deck.last_played().type
+        type = self.deck.last_played.type
         
         # Player who played the card
         usr = self.players.popleft()
@@ -115,12 +125,16 @@ class Game():
             action = " drew a card."
         elif(message[0] == "PLAY"):
             played = Card.str_to_card(message[1].split(' ', 1)[1])
-            usr.hand.remove(played)
-            action = " played a " + str(played) + "."
+            print("played: " + str(played))
+            for hand_card in usr.hand:
+                if(hand_card.color == played.color and hand_card.number == played.number and hand_card.type == played.type):
+                    usr.hand.remove(hand_card)
+                    break
+            action = usr.name + " played a " + str(played) + "."
             if(played.color == "Any"):
                 new_color = message[2].split(' ')[1]
                 played.wild_color = new_color
-                action = usr.username + " played a " + str(played) + " and changed the color to " + played.wild_color + "."
+                action = usr.name + " played a " + str(played) + " and changed the color to " + played.wild_color + "."
             self.deck.play(played)
         return action
         

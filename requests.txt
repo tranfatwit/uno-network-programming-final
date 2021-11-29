@@ -8,7 +8,7 @@ Username: username
 ACCEPTED
 
 TURN
-Cards: color type color type...
+Cards: color type;color type...
 
 PLAY
 Card: Blue Reverse
@@ -21,5 +21,5 @@ WildColor: Red
 
 UPDATE
 Update: last action
-Cards: color type color type...
+Cards: color type;color type...
 End: True

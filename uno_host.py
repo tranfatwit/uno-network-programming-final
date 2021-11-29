@@ -26,9 +26,11 @@ host_players(4, s, players)
 for usr in players:
     connection = usr.ip_address[0]
     connection.sendall(b"Thanks for joining! The game is starting.")
-
+    
 game = Game(players)
 game.run_game()
+
+print("game ended")
 
 for usr in players:
     usr.ip_address[0].close()

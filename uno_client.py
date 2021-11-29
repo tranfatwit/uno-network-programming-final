@@ -19,8 +19,8 @@ def send_update(socket, hand):
 
 def get_update(message, hand):
     update = message[1].split(' ', 1)[1]
-    print(update)
-    new_hand = cards_to_list(message[2])
+    print("Update: " + update)
+    new_hand = cards_to_list(update)
     hand.clear()
     hand.extend(new_hand)
     print(str(hand))
@@ -32,18 +32,15 @@ def get_update(message, hand):
 
 def cards_to_list(card_header):
     cards = card_header.split(' ', 1)[1]
-    cards = cards.split(' ')
-    new_cards = []
-    for i in range(0, len(cards), 2):
-        new_cards.append(' '.join(cards[i:i+2]))
-    
+    cards = cards.split(';')
     result = []
-    for new_card in new_cards:
+    for new_card in cards:
+        print(str(new_card))
         result.append(card.Card.str_to_card(new_card))
     return result
 
 def get_message(socket, hand):
-    message = socket.recv(50).decode().splitlines()
+    message = socket.recv(4096).decode().splitlines()
     if(message[0] == "UPDATE"):
         return get_update(message, hand)
     elif(message[0] == "TURN"):
@@ -62,19 +59,21 @@ def take_turn(socket, message, hand):
 PORT = 11111
 
 HOST = input("Input the server address: ")
+if(HOST == ""):
+    HOST = "127.0.0.1"
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
 username = input("Enter your username: ")
 username = "Username: " + username if len(username) > 0 else ""
 s.sendall(("CONNECT\n" + username).encode())
-message = s.recv(50).decode()   
+message = s.recv(4096).decode()   
 if(message.splitlines()[0] != "ACCEPTED"):
     print("Connection refused: " + message)
     sys.exit()
 
 print(message)
-message = s.recv(50).decode()
+message = s.recv(4096).decode()
 print(message)
 
 hand = []
