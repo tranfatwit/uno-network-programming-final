@@ -7,26 +7,24 @@ Created on Mon Nov 22 17:21:27 2021
 """
 
 from deck import Deck
+import uno_server
 from player import Player
-from uno_server import *
-import Stack
+from card import Card
 
 class Game():
     # constructor
-    def __init__(self):
-        # tracks who's player's turn it is 
-        self.current_player
+    def __init__(self, player_queue):
         
         # creates and shuffles deck
         self.deck = Deck()
         self.deck.shuffle_deck()
         
+        self.players = player_queue
+        
         # deals cards to each player
         for x in range(7):
-            self.players[0].hand.put(self.deck.draw())
-            self.players[1].hand.put(self.deck.draw())
-            self.players[2].hand.put(self.deck.draw())
-            self.players[3].hand.put(self.deck.draw())
+            for usr in self.players:
+                usr.hand.put(self.deck.draw())
             
     # runs rounds of uno until there is a winner 
     def run_game(self):
@@ -34,68 +32,95 @@ class Game():
         
         # continues while winner hasn't been determined
         while not winner:
-            # checks for a winner 
-            winner = self.check_winner()
+            usr = self.players[0]
+            playable = []
+            # make a list of cards that the user may play
+            for card_ in usr.hand:
+                if(self.deck.last_played().match_card(card_)):
+                    playable.append(card_)
             
+            # Send the user a request for their turn and process it
+            usr_turn = uno_server.give_turn(usr, playable)
+            action = self.process_turn(usr, usr_turn)
+            
+            # checks if user's hand is empty and they won
+            winner = self.check_winner(usr)
+
+            if(winner):
+                action += " Their hand is empty and they won!"
+            
+            # send a message to users saying what happened
+            for usrs in self.players:
+                uno_server.send_update(usrs.ip_address[0], action, usrs.hand, winner)
+            
+            if(winner):
+                break
             # if no winner then proceed with round
             self.process_card()
-            
-        # TODO once the while loop ends, send a message to server to end game
     
     # processes events 
     def process_card(self):
-        current_card = self.deck.last_played()
-        type = current_card.type 
-        color = current_card.color
+        type = self.deck.last_played().type
+        
+        # Player who played the card
+        usr = self.players.popleft()
+        # Player being targeted by cards other than reverse
+        target = None
         
         if type == 'Draw-Two':
+            target = self.players.popleft()
             for x in range(2):
-               None # TODO
+                target.hand.append(self.deck.draw())
         elif type == 'Reverse':
+            # unlike other special cards reverse does not skip the next player
+            self.players.appendleft(usr)
             self.reverse_order()
+            return
         elif type == 'Skip':
-            current_player = (self.current_player + 2) % len(self.players)
+            target = self.players.popleft()
         elif type == 'Wild 4':
-            None # TODO 
-            
-        # updates current player to the next once this sequence is over
-        current_player = (self.current_player + 1) % len(players)
-
-        return 
+            target = self.players.popleft()
+            for x in range(4):
+                target.hand.append(self.deck.draw())
+        
+        self.players.append(usr)
+        self.players.append(target)
         
     # checks to see if there is a winner 
-    def check_winner(self):
+    def check_winner(self, user):
         winner = False
         
-        # checks if a player has no cards left
-        for player in players:
-            if player.hand.size() == 0:
-                winner = True
+        # checks if the player has no cards left
+        if(len(user.hand) == 0):
+            winner = True
                 
         return winner
     
-    # used in event of a skip card which will reverse the order of turns 
+    # used in event of a reverse card which will reverse the order of turns 
     def reverse_order(self):
         # used to temporarily store players in order to reverse order 
         temp_stack = []
     
         # moves every player from queue to a stack
-        while(not players.empty()):
-            temp_stack.append(players.get())
+        while(not len(self.players) == 0):
+            temp_stack.append(self.players.popleft())
         # returns every player from stack to the queue now in reversed order
-        while(not temp_stack.empty()):
-            players.put(temp_stack.pop())
+        while(not len(temp_stack) == 0):
+            self.players.append(temp_stack.pop())
+            
+    def process_turn(self, usr: Player, message):
+        action = ""
+        if(message[0] == "DRAW"):
+            usr.hand.append(self.deck.draw())
+            action = " drew a card."
+        elif(message[0] == "PLAY"):
+            played = Card.str_to_card(message[1].split(' ', 1)[1])
+            usr.hand.remove(played)
+            action = " played a " + str(played) + "."
+            if(played.color == "Any"):
+                new_color = message[2].split(' ')[1]
+                played.wild_color = new_color
+                action = usr.username + " played a " + str(played) + " and changed the color to " + played.wild_color + "."
+            self.deck.play(played)
+        return action
         
-    # TODO sends data to server
-    def send_data(self):
-        data = str("")
-        reply = self.net.send(data)
-        return reply
-    
-    # TODO receives data from server
-    def receive_data(self):
-        message = s.recv(50).decode()
-        print(message)
-        
-    
-    

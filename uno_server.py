@@ -7,7 +7,6 @@ Created on Mon Nov 22 00:35:02 2021
 
 import socket
 import player
-import queue
 
 def host_players(numplayers, socket_, players):
     """"Waits for specified number of players to join and fills players with the player info"""
@@ -26,31 +25,28 @@ def host_players(numplayers, socket_, players):
 
                 connections += 1
                 usr = player.Player((sc, address), username)
-                players.put(usr)
+                players.append(usr)
                 print("Added " + username)
                 sc.sendall(b"ACCEPTED")
         except socket.error as msg:
             print('Connection failed: ' + str(msg[0]) + ' Message ' + msg[1])
             sc.close()
 
-def send_update(socket):
-    socket.sendall("".encode())
+def give_turn(usr: player.Player, playable):
+    message = "TURN\n"
+    for cards in playable:
+        message += str(cards) + "\n"
+    usr.ip_address[0].sendall(message.encode())
+    
+def get_turn(usr: player.Player):
+    message = usr.ip_address[0].recv(50).decode().splitlines()
+    return message
 
-HOST = ''
-PORT = 11111
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print('Socket created')
-
-s.bind((HOST, PORT))
-print('Socket bound')
-s.listen(10)
-
-players = queue.Queue()
-host_players(2, s, players)
-while(not players.empty()):
-    usr = players.get()
-    connection = usr.ip_address[0]
-    connection.sendall(b"Thanks for joining! The game is starting.")
-# TODO: Implement game.
-s.close()
+def send_update(socket, message, hand, winner):
+    update = "UPDATE\n"
+    update += "Update: " + message + "\nCards:"
+    for card in hand:
+        update += ' ' + str(card)
+    if(winner):
+        update += "\nEnd: True"
+    socket.sendall(update.encode())

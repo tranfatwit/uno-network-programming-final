@@ -62,20 +62,21 @@ class Deck():
     
     # Function to take a card from the draw pile 
     def draw(self):
+        if(len(self.draw_pile) == 0):
+            self.reshuffle()
         return self.draw_pile.pop()
-    
+            
+        
     # Function to add to the discard pile
-    def discard(self, card):
-        self.discard_pile.append(card)
-        self.last_played = self.discard_pile[-1]
+    def play(self, card):
+        self.discard_pile.append(self.last_played())
+        self.last_played = card
         
     # Function to reshuffle discard pile into draw pile excluding last played card
     def reshuffle(self):
-        for x in range(len(self.discard_pile) - 1):
-                self.draw_pile.append(self.discard_pile[x])
+        self.draw_pile.extend(self.discard_pile)
         self.discard_pile.clear()
-        self.discard_pile.append(self.last_played)
-        random.shuffle(self.draw_pile)
+        self.shuffle_deck()
     
 # Testing creation of UNO deck
 #print("Printing cards:")

@@ -6,3 +6,20 @@ Username: username
 # ACCEPTED acknowledges a user's connect request and confirms their place in
 # the game.
 ACCEPTED
+
+TURN
+Cards: color type color type...
+
+PLAY
+Card: Blue Reverse
+
+or
+
+PLAY
+Card: WILD
+WildColor: Red
+
+UPDATE
+Update: last action
+Cards: color type color type...
+End: True
