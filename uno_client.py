@@ -20,22 +20,24 @@ def send_update(socket, hand):
 def get_update(message, hand):
     update = message[1].split(' ', 1)[1]
     print("Update: " + update)
-    new_hand = cards_to_list(update)
+    new_hand = cards_to_list(message[2])
     hand.clear()
     hand.extend(new_hand)
-    print(str(hand))
-    
+    print("Hand: ")
+    for cards in hand:
+        print(cards)
     # if the message has the End header the game is over
     if(len(message) > 3):
         return True
     return False
 
 def cards_to_list(card_header):
+    #print("Header: " + card_header)
     cards = card_header.split(' ', 1)[1]
     cards = cards.split(';')
     result = []
     for new_card in cards:
-        print(str(new_card))
+        #print(str(new_card))
         result.append(card.Card.str_to_card(new_card))
     return result
 
@@ -49,7 +51,7 @@ def get_message(socket, hand):
         
 def take_turn(socket, message, hand):
     cards = cards_to_list(message[1])
-    print("Playable cards: \n")
+    print("\nPlayable cards: ")
     for playable in cards:
         print(str(playable))
     send_update(socket, hand)

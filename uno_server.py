@@ -50,12 +50,12 @@ def get_turn(usr: player.Player):
 
 def send_update(socket, message, hand, winner):
     update = "UPDATE\n"
-    update += "Update: " + message + "\nCards:"
+    update += "Update: " + message + "\nCards: "
     for index, card in enumerate(hand):
         if(index != 0):
             update += ';'
         update += str(card)
     if(winner):
         update += "\nEnd: True"
-    print("Update:\n" + update)
+    #print("Update:\n" + update)
     socket.sendall(update.encode())

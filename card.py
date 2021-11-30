@@ -59,6 +59,7 @@ class Card:
             return Card("Any", "", "Wild")
         else:
             color = values[0]
+            #print(values)
             cardvalue = None
             for num in enums.Numbers:
                 if(num.value == values[1]):

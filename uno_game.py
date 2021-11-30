@@ -46,7 +46,7 @@ class Game():
             last_card = self.deck.last_played
             for item in usr.hand:
                 if(last_card.match_card(item)):
-                    print(str(item))
+                    #print(str(item))
                     playable.append(item)
             
             # Send the user a request for their turn and process it
@@ -59,6 +59,7 @@ class Game():
             if(winner):
                 action += " Their hand is empty and they won!"
             
+            print(action)
             # send a message to users saying what happened
             for usrs in self.players:
                 uno_server.send_update(usrs.ip_address[0], action, usrs.hand, winner)
@@ -94,7 +95,8 @@ class Game():
                 target.hand.append(self.deck.draw())
         
         self.players.append(usr)
-        self.players.append(target)
+        if(target != None):
+            self.players.append(target)
         
     # checks to see if there is a winner 
     def check_winner(self, user):
